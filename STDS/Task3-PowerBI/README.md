@@ -242,16 +242,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Power BI community for visualization best practices
 - Contributors and testers
 
----
 
-## 📞 Support
-
-For support, please:
-- 📧 Email: ahmedhussein12215@gmail.com
-- 💬 Open an issue in this repository
-- 📚 Check the [Documentation](./Documentation)
-
----
 
 <div align="center">
 
