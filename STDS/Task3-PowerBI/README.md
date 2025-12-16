@@ -236,21 +236,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🙏 Acknowledgments
-
-- Microsoft AdventureWorks sample database
-- Power BI community for visualization best practices
-- Contributors and testers
-
-
-
-<div align="center">
-
-### ⭐ Star this repository if you find it helpful!
-
-**Made with ❤️ and Power BI**
-
-[![GitHub stars](https://img.shields.io/github/stars/A7med668/adventureworks-analytics-powerbI?style=social)](https://github.com/A7med668/adventureworks-analytics-powerbI)
-[![GitHub forks](https://img.shields.io/github/forks/A7med668/adventureworks-analytics-powerbI?style=social)](https://github.com/A7med668/adventureworks-analytics-powerbI)
 
 </div>
