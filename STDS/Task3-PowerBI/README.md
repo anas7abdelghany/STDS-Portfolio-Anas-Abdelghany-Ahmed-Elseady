@@ -207,59 +207,10 @@ RETURN
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 👥 Contributers
 
-
-| [<img src="https://avatars.githubusercontent.com/A7med668" width="120px" style="border-radius:50%; border:3px solid #58a6ff;">](https://github.com/A7med668) | [<img src="https://avatars.githubusercontent.com/anas7abdelghany" width="120px" style="border-radius:50%; border:3px solid #58a6ff;">](https://github.com/anas7abdelghany) | [<img src="https://avatars.githubusercontent.com/khloudemad" width="120px" style="border-radius:50%; border:3px solid #58a6ff;">](https://github.com/khloudemad) |
+| [<img src="https://avatars.githubusercontent.com/anas7abdelghany" width="120px" style="border-radius:50%; border:3px solid #58a6ff;">](https://github.com/anas7abdelghany) | [<img src="https://avatars.githubusercontent.com/A7med668" width="120px" style="border-radius:50%; border:3px solid #58a6ff;">](https://github.com/A7med668) | [<img src="https://avatars.githubusercontent.com/khloudemad" width="120px" style="border-radius:50%; border:3px solid #58a6ff;">](https://github.com/khloudemad) |
 |:--:|:--:|:--:|
-| <span style="color:#58a6ff; font-weight:bold;">Ahmed Hussein</span> | <span style="color:#58a6ff; font-weight:bold;">Anas Abdelghany</span> | <span style="color:#58a6ff; font-weight:bold;">Khloud Emad</span> |
+| <span style="color:#58a6ff; font-weight:bold;">Anas Abdelghany</span> | <span style="color:#58a6ff; font-weight:bold;">Ahmed Hussein</span> | <span style="color:#58a6ff; font-weight:bold;">Khloud Emad</span> |
 | <span style="color:#8ab4f8;">👨‍💻 Data Science Student</span> | <span style="color:#8ab4f8;">👨‍💻 Data Science Student</span> | <span style="color:#8ab4f8;">👨‍💻 Data Science Student</span> |
-| [<span style="color:#58a6ff;">🔗 GitHub Profile</span>](https://github.com/A7med668) | [<span style="color:#58a6ff;">🔗 GitHub Profile</span>](https://github.com/anas7abdelghany) | [<span style="color:#58a6ff;">🔗 GitHub Profile</span>](https://github.com/khloudemad) |
-
----
-
-## 🙏 Acknowledgments
-
-- Microsoft AdventureWorks sample database
-- Power BI community for visualization best practices
-- Contributors and testers
-
----
-
-## 📞 Support
-
-For support, please:
-- 📧 Email: ahmedhussein12215@gmail.com
-- 💬 Open an issue in this repository
-- 📚 Check the [Documentation](./Documentation)
-
----
-
-<div align="center">
-
-### ⭐ Star this repository if you find it helpful!
-
-**Made with ❤️ and Power BI**
-
-[![GitHub stars](https://img.shields.io/github/stars/A7med668/adventureworks-analytics-powerbI?style=social)](https://github.com/A7med668/adventureworks-analytics-powerbI)
-[![GitHub forks](https://img.shields.io/github/forks/A7med668/adventureworks-analytics-powerbI?style=social)](https://github.com/A7med668/adventureworks-analytics-powerbI)
-
-</div>
+| [<span style="color:#58a6ff;">🔗 GitHub Profile</span>](https://github.com/anas7abdelghany) | [<span style="color:#58a6ff;">🔗 GitHub Profile</span>](https://github.com/A7med668) | [<span style="color:#58a6ff;">🔗 GitHub Profile</span>](https://github.com/khloudemad) |
