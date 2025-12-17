@@ -23,57 +23,62 @@ This section defines the rigorous rules applied during the transformation phase 
 | **Rule 3** | `energy_unit` NOT IN `["W", "kW"]` | Default to `"kW"` & Flag `ASSUMED_UNIT` |
 
 ### **2. Handling Missing Values**
-* **Rule 4:** IF `energy_value` IS NULL → Status: `MISSING_VALUE` & Exclude from peak calculations.
-* **Rule 5:** IF `timestamp` IS NULL → Infer time (`previous + 15m`) & Status: `INFERRED_TIME`.
-* **Rule 6:** IF `meter_id` IS NULL → **REJECT RECORD COMPLETELY**.
+| Rule ID | Condition | Action / Status |
+| :--- | :--- | :--- |
+| **Rule 4** | `energy_value` IS NULL | Status: `MISSING_VALUE` + Exclude from calculations |
+| **Rule 5** | `timestamp` IS NULL | Infer time (`prev + 15m`) + Status: `INFERRED_TIME` |
+| **Rule 6** | `meter_id` IS NULL | 🚨 **REJECT RECORD COMPLETELY** |
 
 ### **3. Data Validation & Quality**
-* **Rule 7:** Negative values are flagged as `INVALID_NEGATIVE` and rejected from analytics.
-* **Rule 8:** Residential values `> 50kW` are flagged as `SUSPICIOUSLY_HIGH` for manual review.
+* **Rule 7:** Negative values are flagged as `INVALID_NEGATIVE` and rejected.
+* **Rule 8:** Residential values `> 50kW` are flagged as `SUSPICIOUSLY_HIGH` for review.
 * **Rule 9:** Abrupt changes (`> 30kW` in 15 mins) are flagged as `ABRUPT_CHANGE`.
 * **Rule 10:** Future timestamps (>5 mins) are corrected to `current_time` and flagged.
 
 ### **4. Faulty Meter Detection**
-> [!IMPORTANT]
-> These rules help in proactive maintenance and identifying hardware issues.
-* **Zero Consumption:** 24 consecutive hours of `0` value → `POTENTIAL_FAULTY`.
-* **Stuck Meter:** Standard deviation `< 0.01` over 48 hours → `POTENTIAL_STUCK_METER`.
-* **Connectivity:** No readings for `> 72 hours` → `OFFLINE` status + Alert.
+> ⚠️ **Proactive Maintenance:** These rules help identify hardware issues and connectivity problems automatically.
+
+| Rule ID | Issue | Condition | Action / Status |
+| :--- | :--- | :--- | :--- |
+| **Rule 11** | **Zero Consumption** | `0` value for 24 consecutive hours | `POTENTIAL_FAULTY` + Ticket |
+| **Rule 12** | **Stuck Meter** | Std Dev `< 0.01` over 48 hours | `POTENTIAL_STUCK_METER` |
+| **Rule 13** | **Suspicious Pattern**| All identical values detected | `SUSPICIOUS_PATTERN` |
+| **Rule 14** | **Abnormally Low** | `< 10%` of neighborhood avg (7 days) | `ABNORMALLY_LOW` |
+| **Rule 15** | **Connectivity** | No readings for `> 72 hours` | `OFFLINE` + Alert |
 
 ---
 
 ## ⚙️ Task C: Data Pipeline Execution Flow
 
 ### **1. Ingestion (Raw Storage)**
-Raw CSV data (e.g., `500W`) lands in an **S3 Bucket (Landing Zone)** via API. This preserves the "Single Source of Truth" for auditing and compliance.
+Raw CSV data (e.g., `meter_id=123, energy=500, unit=W`) lands in an **S3 Bucket (Landing Zone)** via API. This preserves the "Single Source of Truth" for auditing.
 
 ### **2. Orchestration (Trigger)**
 An S3 Event triggers an **AWS Lambda** function. 
-* **Retry Logic:** Automatic 3x retry on initial trigger failure before logging manual intervention.
+* **Retry Logic:** Automatic 3x retry on initial trigger failure before logging for manual intervention.
 
 ### **3. Transformation Layer**
-In the transformation function:
-1.  **Parsing:** Extract fields from the CSV.
-2.  **Standardization:** Convert units (e.g., `500W` → `0.5kW`).
-3.  **Null Checking:** Verify mandatory fields.
-4.  **Enrichment:** Add UTC timestamps, processing IDs, and Quality Scores.
+The transformation process performs:
+* **Parsing & Cleaning:** Extracts fields and standardizes units (e.g., `500W` → `0.5kW`).
+* **Validation:** Checks for nulls, range limits (0-50 kW), and abrupt changes.
+* **Enrichment:** Adds UTC timestamps, processing IDs, and Quality Scores.
 
 ### **4. Structured Loading (RDS)**
 Cleaned data is loaded into an **RDS SQL Table** (`cleaned_readings`). 
-* **Purpose:** Immediate SQL queries for peak detection and real-time insights.
-* **Resilience:** Retries with **Exponential Backoff** and Dead Letter Queue (DLQ).
+* **Purpose:** Enables immediate SQL queries for peak detection and real-time monitoring.
+* **Resilience:** Uses **Exponential Backoff**; persistent failures move to Dead Letter Queue (DLQ).
 
 ### **5. Analytical Archiving (Parquet)**
 Simultaneously, data is converted to **Apache Parquet** format.
-* **Efficiency:** Reduces storage by ~80% and optimizes columnar analytics.
-* **Organization:** Partitioned by `date/hour/meter_id`.
+* **Efficiency:** Columnar format reduces storage by ~80% and optimizes analytical queries.
+* **Organization:** Partitioned by `date/hour/meter_id` for long-term trend detection.
 
 ### **6. Error Handling & Success Policy**
-* ✅ **On Success:** Completion metrics logged; data available for operational and analytical queries.
-* ❌ **On Failure:** Records move to a **DLQ** for manual inspection, an **SNS Alert** is triggered, and bad data is excluded from downstream propagation.
+* ✅ **On Success:** Metrics logged; data becomes available for dashboards and forecasting.
+* ❌ **On Failure:** Records are routed to a **DLQ** for inspection, an **SNS Alert** is triggered, and invalid data is blocked from downstream systems to maintain data quality.
 
 ---
 
 ### **Next Steps**
-* [ ] Integration with Grafana/QuickSight for real-time monitoring.
-* [ ] Implementation of predictive maintenance models using the Parquet archive.
+* [ ] Integrate Grafana for real-time energy consumption dashboards.
+* [ ] Implement automated maintenance ticket generation via Jira API for Rule 11.
