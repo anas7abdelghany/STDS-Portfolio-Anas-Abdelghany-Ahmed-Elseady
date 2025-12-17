@@ -5,7 +5,7 @@
 ![ETL Architecture](./TaskA.png)
 
 
-# **Task B: Transformation Logic & Business Rules Design**
+# Task B :-
 
 
 
