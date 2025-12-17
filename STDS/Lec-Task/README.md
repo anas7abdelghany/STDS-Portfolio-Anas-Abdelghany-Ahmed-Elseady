@@ -1,4 +1,4 @@
-## Task A:-
+## Task A :-
 
 ### **ETL Architecture Diagram (System Design)**
 
