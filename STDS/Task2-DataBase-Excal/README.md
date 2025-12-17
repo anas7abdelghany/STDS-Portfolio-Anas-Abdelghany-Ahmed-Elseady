@@ -49,4 +49,12 @@ This project contains comprehensive educational data including students, instruc
 
 **📊 Data-driven Education Management**
 
+## 👥 Contributers
+
+| [<img src="https://avatars.githubusercontent.com/anas7abdelghany" width="120px" style="border-radius:50%; border:3px solid #58a6ff;">](https://github.com/anas7abdelghany) | [<img src="https://avatars.githubusercontent.com/khloudemad" width="120px" style="border-radius:50%; border:3px solid #58a6ff;">](https://github.com/khloudemad) |
+|:--:|:--:|
+| <span style="color:#58a6ff; font-weight:bold;">Anas Abdelghany</span> | <span style="color:#58a6ff; font-weight:bold;">Khloud Emad</span> |
+| <span style="color:#8ab4f8;">👨‍💻 Data Science Student</span> | <span style="color:#8ab4f8;">👨‍💻 Data Science Student</span> |
+| [<span style="color:#58a6ff;">🔗 GitHub Profile</span>](https://github.com/anas7abdelghany) | [<span style="color:#58a6ff;">🔗 GitHub Profile</span>](https://github.com/khloudemad) |
+
 </div>
