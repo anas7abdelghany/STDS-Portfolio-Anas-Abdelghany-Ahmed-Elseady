@@ -30,10 +30,12 @@ This section defines the rigorous rules applied during the transformation phase 
 | **Rule 6** | `meter_id` IS NULL | 🚨 **REJECT RECORD COMPLETELY** |
 
 ### **3. Data Validation & Quality**
-* **Rule 7:** Negative values are flagged as `INVALID_NEGATIVE` and rejected.
-* **Rule 8:** Residential values `> 50kW` are flagged as `SUSPICIOUSLY_HIGH` for review.
-* **Rule 9:** Abrupt changes (`> 30kW` in 15 mins) are flagged as `ABRUPT_CHANGE`.
-* **Rule 10:** Future timestamps (>5 mins) are corrected to `current_time` and flagged.
+| Rule ID | Condition | Action / Status |
+| :--- | :--- | :--- |
+| **Rule 7** | `energy_value < 0` | Status: `INVALID_NEGATIVE` + Reject from analytics |
+| **Rule 8** | `value > 50kW` (Residential) | Status: `SUSPICIOUSLY_HIGH` + Manual review |
+| **Rule 9** | `ABS(change) > 30kW` (15 min) | Status: `ABRUPT_CHANGE` |
+| **Rule 10** | `timestamp > current + 5m` | Status: `TIME_CORRECTED` (Set to current time) |
 
 ### **4. Faulty Meter Detection**
 > ⚠️ **Proactive Maintenance:** These rules help identify hardware issues and connectivity problems automatically.
