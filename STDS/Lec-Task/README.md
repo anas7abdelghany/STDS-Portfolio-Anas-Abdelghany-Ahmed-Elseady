@@ -1,113 +1,79 @@
-# Task A :-
+# 🏗️ Energy Data ETL Pipeline Project
 
+This repository contains the documentation and logic for an automated ETL (Extract, Transform, Load) pipeline designed for smart meter energy data.
 
-### **ETL Architecture Diagram (System Design)**
+---
 
+## 📍 Task A: System Design
+### **ETL Architecture Diagram**
+The following diagram illustrates the data flow from raw smart meter ingestion to structured storage and archival.
 
 ![ETL Architecture](./TaskA.png)
 
+---
 
-# Task B :-
+## 📜 Task B: Business Logic & Data Governance
+This section defines the rigorous rules applied during the transformation phase to ensure data integrity and reliability.
 
+### **1. Unit Standardization**
+| Rule ID | Condition | Action |
+| :--- | :--- | :--- |
+| **Rule 1** | `energy_unit == "W"` | Convert to `kW` (Value / 1000) |
+| **Rule 2** | `energy_unit` in `["kwh", "KWH"]` | Standardize naming to `"kW"` |
+| **Rule 3** | `energy_unit` NOT IN `["W", "kW"]` | Default to `"kW"` & Flag `ASSUMED_UNIT` |
 
+### **2. Handling Missing Values**
+* **Rule 4:** IF `energy_value` IS NULL → Status: `MISSING_VALUE` & Exclude from peak calculations.
+* **Rule 5:** IF `timestamp` IS NULL → Infer time (`previous + 15m`) & Status: `INFERRED_TIME`.
+* **Rule 6:** IF `meter_id` IS NULL → **REJECT RECORD COMPLETELY**.
 
-## **1. Unit Standardization Rules**
+### **3. Data Validation & Quality**
+* **Rule 7:** Negative values are flagged as `INVALID_NEGATIVE` and rejected from analytics.
+* **Rule 8:** Residential values `> 50kW` are flagged as `SUSPICIOUSLY_HIGH` for manual review.
+* **Rule 9:** Abrupt changes (`> 30kW` in 15 mins) are flagged as `ABRUPT_CHANGE`.
+* **Rule 10:** Future timestamps (>5 mins) are corrected to `current_time` and flagged.
 
-**Rule 1:** IF energy_unit = "W" THEN energy_value = energy_value / 1000 AND energy_unit = "kW"  
+### **4. Faulty Meter Detection**
+> [!IMPORTANT]
+> These rules help in proactive maintenance and identifying hardware issues.
+* **Zero Consumption:** 24 consecutive hours of `0` value → `POTENTIAL_FAULTY`.
+* **Stuck Meter:** Standard deviation `< 0.01` over 48 hours → `POTENTIAL_STUCK_METER`.
+* **Connectivity:** No readings for `> 72 hours` → `OFFLINE` status + Alert.
 
-**Rule 2:** IF energy_unit = "kwh" OR energy_unit = "KWH" THEN energy_unit = "kW" (standardize naming)  
+---
 
-**Rule 3:** IF energy_unit NOT IN ["W", "kW"] THEN energy_unit = "kW" (assume default) AND flag = "ASSUMED_UNIT"
+## ⚙️ Task C: Data Pipeline Execution Flow
 
+### **1. Ingestion (Raw Storage)**
+Raw CSV data (e.g., `500W`) lands in an **S3 Bucket (Landing Zone)** via API. This preserves the "Single Source of Truth" for auditing and compliance.
 
+### **2. Orchestration (Trigger)**
+An S3 Event triggers an **AWS Lambda** function. 
+* **Retry Logic:** Automatic 3x retry on initial trigger failure before logging manual intervention.
 
-## **2. Missing Values Rules**
-
-**Rule 4:** IF energy_value IS NULL THEN status = "MISSING_VALUE" AND exclude_from_peak_calculations = TRUE  
-
-**Rule 5:** IF timestamp IS NULL THEN timestamp = previous_timestamp + 15_minutes AND status = "INFERRED_TIME"
-
-**Rule 6:** IF meter_id IS NULL THEN REJECT_RECORD COMPLETELY  
-
-
-
-## **3. Data Validation Rules**
-
-**Rule 7:** IF energy_value < 0 THEN status = "INVALID_NEGATIVE" AND reject_from_analytics = TRUE  
-
-**Rule 8:** IF energy_value_kw > 50 AND meter_type = "RESIDENTIAL" THEN status = "SUSPICIOUSLY_HIGH" AND requires_manual_review = TRUE
-
-**Rule 9:** IF ABS(current_value - previous_value) > 30 AND time_gap = 15_min THEN status = "ABRUPT_CHANGE"
-
-**Rule 10:** IF timestamp > current_time + 5_minutes THEN timestamp = current_time AND status = "TIME_CORRECTED"
-
-
-
-## **4. Faulty Meter Detection Rules**
-
-**Rule 11:** IF energy_value = 0 FOR 24_consecutive_hours THEN meter_status = "POTENTIAL_FAULTY" AND generate_maintenance_ticket = TRUE  
-
-**Rule 12:** IF standard_deviation(last_48h_readings) < 0.01 THEN meter_status = "POTENTIAL_STUCK_METER"
-
-**Rule 13:** IF reading_pattern = "ALL_IDENTICAL_VALUES" THEN meter_status = "SUSPICIOUS_PATTERN"
-
-**Rule 14:** IF consumption < 10%_of_neighborhood_average AND duration > 7_days THEN meter_status = "ABNORMALLY_LOW"
-
-**Rule 15:** IF last_reading > 72_hours_ago THEN meter_status = "OFFLINE" AND communication_alert = TRUE
-
-
-# Task C :-
-
-## **1. Upload to Raw Storage**
-
-The record arrives as part of a raw CSV file (e.g., meter_id=123, timestamp=2025-12-17T12:00:00, energy=500, unit=W) from the smart meter via API or batch upload. It's stored unchanged in a raw storage bucket (object storage like AWS S3). This serves as the "landing zone" for dark data, preserving the original format for auditing and compliance.
-
-
-
-## **2. Triggering of the Transformation Process**
-
-The file upload event automatically triggers serverless orchestration (e.g., AWS Lambda). The orchestrator parses the CSV, extracts individual records, and invokes the transformation layer. If the initial trigger fails (due to high load or network issues), it automatically retries up to 3 times before logging an error for manual intervention.
-
-
-
-## **3. Data Cleaning and Validation Steps**
-
+### **3. Transformation Layer**
 In the transformation function:
+1.  **Parsing:** Extract fields from the CSV.
+2.  **Standardization:** Convert units (e.g., `500W` → `0.5kW`).
+3.  **Null Checking:** Verify mandatory fields.
+4.  **Enrichment:** Add UTC timestamps, processing IDs, and Quality Scores.
 
-Parsing: Extract fields from the CSV record
+### **4. Structured Loading (RDS)**
+Cleaned data is loaded into an **RDS SQL Table** (`cleaned_readings`). 
+* **Purpose:** Immediate SQL queries for peak detection and real-time insights.
+* **Resilience:** Retries with **Exponential Backoff** and Dead Letter Queue (DLQ).
 
-Unit Standardization: Convert 500 W → 0.5 kW (divide by 1000)
+### **5. Analytical Archiving (Parquet)**
+Simultaneously, data is converted to **Apache Parquet** format.
+* **Efficiency:** Reduces storage by ~80% and optimizes columnar analytics.
+* **Organization:** Partitioned by `date/hour/meter_id`.
 
-Null Checking: Verify no missing values
+### **6. Error Handling & Success Policy**
+* ✅ **On Success:** Completion metrics logged; data available for operational and analytical queries.
+* ❌ **On Failure:** Records move to a **DLQ** for manual inspection, an **SNS Alert** is triggered, and bad data is excluded from downstream propagation.
 
-Range Validation: Ensure energy value is within acceptable limits (0-50 kW for residential)
+---
 
-Fault Detection: Check time-series context; if part of 24+ hour zero-streak, flag as potentially faulty
-
-Metadata Enrichment: Add cleaned timestamp (UTC), processing ID, and quality score
-If validation fails (e.g., invalid range or format), the record is flagged and routed to the error path.
-
-
-
-## **4. Storage in Structured Format (RDS)**
-
-The cleaned record is loaded into a structured database (RDS table like cleaned_readings with columns: meter_id, timestamp, energy_kW, flags, quality_score). This enables immediate SQL queries for validation (peak detection) and real-time insights. If the insert fails (database connection issue), the system retries 3 times with exponential backoff; on persistent failure, sends to Dead Letter Queue (DLQ) and triggers an alert.
-
-
-
-
-## **5. Conversion and Archival in Parquet Format**
-
-Simultaneously, the record is converted to Parquet format (optimized for columnar analytics) and appended to partitioned files in archival storage (organized by date/hour/meter_id). Parquet automatically handles compression (reducing storage by ~80%) and schema enforcement, preparing the data for long-term analysis like forecasting and trend detection.
-
-
-
-
-## **6. How Success or Failure is Handled**
-
-On Success: The orchestrator logs completion metrics. The record becomes available in both RDS (for operational queries) and Parquet storage (for analytical queries), enabling peak detection and dashboard updates immediately.
-
-On Failure (during transform/validation): The system retries the failed step up to 3 times with exponential backoff. If all retries fail, the record moves to a DLQ for manual inspection, triggers an alert (email/SNS), and is excluded from downstream analytics to prevent bad data propagation. This ensures pipeline resilience with minimal manual intervention.
-
-
-
+### **Next Steps**
+* [ ] Integration with Grafana/QuickSight for real-time monitoring.
+* [ ] Implementation of predictive maintenance models using the Parquet archive.
