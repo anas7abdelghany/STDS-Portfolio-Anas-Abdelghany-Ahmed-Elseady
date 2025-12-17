@@ -1,62 +1,86 @@
-# 🏗️ GreenStream Energy: Automated ETL Pipeline Design
+# 🏗️ Energy Data ETL Pipeline Project
 
-[cite_start]This project proposes a conceptual serverless ETL pipeline for **GreenStream Energy** to transform "dark data" from 50,000 smart meters into actionable insights.
+This repository contains the documentation and logic for an automated ETL (Extract, Transform, Load) pipeline designed for smart meter energy data.
 
 ---
 
-## 📍 Task A: ETL Architecture Diagram
-[cite_start]The design focuses on data flow logic and robust error handling to meet strategic goals[cite: 19, 36].
+## 📍 Task A: System Design
+### **ETL Architecture Diagram**
+The following diagram illustrates the data flow from raw smart meter ingestion to structured storage and archival.
 
 ![ETL Architecture](./TaskA.png)
 
 ---
 
-## 📜 Task B: Transformation Logic & Business Rules
-[cite_start]These rules resolve real-world data quality issues like inconsistent units and Wi-Fi outages[cite: 10, 11, 15].
+## 📜 Task B: Business Logic & Data Governance
+This section defines the rigorous rules applied during the transformation phase to ensure data integrity and reliability.
 
 ### **1. Unit Standardization**
 | Rule ID | Condition | Action |
 | :--- | :--- | :--- |
-| **Rule 1** | `energy_unit == "W"` | Convert to `kW` (Value / 1000) [cite: 45] |
+| **Rule 1** | `energy_unit == "W"` | Convert to `kW` (Value / 1000) |
 | **Rule 2** | `energy_unit` in `["kwh", "KWH"]` | Standardize naming to `"kW"` |
 | **Rule 3** | `energy_unit` NOT IN `["W", "kW"]` | Default to `"kW"` & Flag `ASSUMED_UNIT` |
 
 ### **2. Handling Missing Values**
 | Rule ID | Condition | Action / Status |
 | :--- | :--- | :--- |
-| **Rule 4** | `energy_value` IS NULL | [cite_start]Flag & Exclude from peak calculations [cite: 46] |
-| **Rule 5** | `timestamp` IS NULL | [cite_start]Infer time (`prev + 15m`) due to Wi-Fi gaps  |
+| **Rule 4** | `energy_value` IS NULL | Status: `MISSING_VALUE` + Exclude from calculations |
+| **Rule 5** | `timestamp` IS NULL | Infer time (`prev + 15m`) + Status: `INFERRED_TIME` |
 | **Rule 6** | `meter_id` IS NULL | 🚨 **REJECT RECORD COMPLETELY** |
 
 ### **3. Data Validation & Quality**
 | Rule ID | Condition | Action / Status |
 | :--- | :--- | :--- |
-| **Rule 7** | `energy_value < 0` | Status: `INVALID_NEGATIVE` + Reject |
-| **Rule 8** | `value > 50kW` (Res.) | Status: `SUSPICIOUSLY_HIGH` + Review |
-| **Rule 9** | `ABS(change) > 30kW` | Status: `ABRUPT_CHANGE` |
-| **Rule 10** | `timestamp > current` | Status: `TIME_CORRECTED` |
+| **Rule 7** | `energy_value < 0` | Status: `INVALID_NEGATIVE` + Reject from analytics |
+| **Rule 8** | `value > 50kW` (Residential) | Status: `SUSPICIOUSLY_HIGH` + Manual review |
+| **Rule 9** | `ABS(change) > 30kW` (15 min) | Status: `ABRUPT_CHANGE` |
+| **Rule 10** | `timestamp > current + 5m` | Status: `TIME_CORRECTED` (Set to current time) |
 
-### **4. Faulty Meter Detection (Basic Logic)**
+### **4. Faulty Meter Detection**
+> ⚠️ **Proactive Maintenance:** These rules help identify hardware issues and connectivity problems automatically.
+
 | Rule ID | Issue | Condition | Action / Status |
 | :--- | :--- | :--- | :--- |
-| **Rule 11** | **Zero Consumption** | [cite_start]`0` value for long periods [cite: 47] | `POTENTIAL_FAULTY` |
-| **Rule 12** | **Stuck Meter** | Std Dev `< 0.01` over 48 hours | `POTENTIAL_STUCK` |
+| **Rule 11** | **Zero Consumption** | `0` value for 24 consecutive hours | `POTENTIAL_FAULTY` + Ticket |
+| **Rule 12** | **Stuck Meter** | Std Dev `< 0.01` over 48 hours | `POTENTIAL_STUCK_METER` |
+| **Rule 13** | **Suspicious Pattern**| All identical values detected | `SUSPICIOUS_PATTERN` |
+| **Rule 14** | **Abnormally Low** | `< 10%` of neighborhood avg (7 days) | `ABNORMALLY_LOW` |
 | **Rule 15** | **Connectivity** | No readings for `> 72 hours` | `OFFLINE` + Alert |
 
 ---
 
-## ⚙️ Task C: Single Record Lifecycle
-[cite_start]The lifecycle of a record from ingestion to archival[cite: 48, 49]:
+## ⚙️ Task C: Data Pipeline Execution Flow
 
-1. [cite_start]**Raw Storage:** Record arrives in **CSV format** at the S3 Landing Zone[cite: 17, 51].
-2. [cite_start]**Triggering:** Upload event triggers a **Serverless Lambda** function[cite: 52].
-3. [cite_start]**Cleaning & Validation:** The system applies business rules to standardize units and validate ranges[cite: 53].
-4. [cite_start]**Structured Storage:** Cleaned data is saved to **RDS** for immediate querying and validation[cite: 21, 54].
-5. [cite_start]**Archival:** Data is converted to **Parquet format** for long-term predictive analytics[cite: 22, 55].
-6. [cite_start]**Failure Handling:** Automatic retries are triggered; persistent failures move to a **DLQ**[cite: 23, 56].
+### **1. Ingestion (Raw Storage)**
+Raw CSV data (e.g., `meter_id=123, energy=500, unit=W`) lands in an **S3 Bucket (Landing Zone)** via API. This preserves the "Single Source of Truth" for auditing.
+
+### **2. Orchestration (Trigger)**
+An S3 Event triggers an **AWS Lambda** function. 
+* **Retry Logic:** Automatic 3x retry on initial trigger failure before logging for manual intervention.
+
+### **3. Transformation Layer**
+The transformation process performs:
+* **Parsing & Cleaning:** Extracts fields and standardizes units (e.g., `500W` → `0.5kW`).
+* **Validation:** Checks for nulls, range limits (0-50 kW), and abrupt changes.
+* **Enrichment:** Adds UTC timestamps, processing IDs, and Quality Scores.
+
+### **4. Structured Loading (RDS)**
+Cleaned data is loaded into an **RDS SQL Table** (`cleaned_readings`). 
+* **Purpose:** Enables immediate SQL queries for peak detection and real-time monitoring.
+* **Resilience:** Uses **Exponential Backoff**; persistent failures move to Dead Letter Queue (DLQ).
+
+### **5. Analytical Archiving (Parquet)**
+Simultaneously, data is converted to **Apache Parquet** format.
+* **Efficiency:** Columnar format reduces storage by ~80% and optimizes analytical queries.
+* **Organization:** Partitioned by `date/hour/meter_id` for long-term trend detection.
+
+### **6. Error Handling & Success Policy**
+* ✅ **On Success:** Metrics logged; data becomes available for dashboards and forecasting.
+* ❌ **On Failure:** Records are routed to a **DLQ** for inspection, an **SNS Alert** is triggered, and invalid data is blocked from downstream systems to maintain data quality.
 
 ---
 
-### **Strategic Outcomes**
-* [cite_start]✅ Prepared for Predictive Analytics[cite: 7].
-* [cite_start]✅ Optimized for Large-Scale Historical Analysis[cite: 17].
+### **Next Steps**
+* [ ] Integrate Grafana for real-time energy consumption dashboards.
+* [ ] Implement automated maintenance ticket generation via Jira API for Rule 11.
