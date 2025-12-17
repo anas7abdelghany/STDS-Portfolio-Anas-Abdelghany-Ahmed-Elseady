@@ -1,4 +1,4 @@
-## 📁 Dashboard Pages
+## Task A 
 
-### **1️⃣ Page 1: Sales Overview**
-![Sales Dashboard](./TaskA.png)
+### **ETL Architecture Diagram (System Design)**
+![ETL Architecture](./TaskA.png)
