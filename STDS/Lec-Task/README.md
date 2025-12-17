@@ -1,11 +1,11 @@
-## Task A :-
+# Task A :-
 
 ### **ETL Architecture Diagram (System Design)**
 
 ![ETL Architecture](./TaskA.png)
 
 
-## **Task B: Transformation Logic & Business Rules Design**
+# **Task B: Transformation Logic & Business Rules Design**
 
 
 
