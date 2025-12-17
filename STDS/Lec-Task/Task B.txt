@@ -1,0 +1,47 @@
+## **Task B: Transformation Logic & Business Rules Design**
+
+
+
+### **1. Unit Standardization Rules**
+
+**Rule 1:** IF energy_unit = "W" THEN energy_value = energy_value / 1000 AND energy_unit = "kW"  
+
+**Rule 2:** IF energy_unit = "kwh" OR energy_unit = "KWH" THEN energy_unit = "kW" (standardize naming)  
+
+**Rule 3:** IF energy_unit NOT IN ["W", "kW"] THEN energy_unit = "kW" (assume default) AND flag = "ASSUMED_UNIT"
+
+
+
+### **2. Missing Values Rules**
+
+**Rule 4:** IF energy_value IS NULL THEN status = "MISSING_VALUE" AND exclude_from_peak_calculations = TRUE  
+
+**Rule 5:** IF timestamp IS NULL THEN timestamp = previous_timestamp + 15_minutes AND status = "INFERRED_TIME"
+
+**Rule 6:** IF meter_id IS NULL THEN REJECT_RECORD COMPLETELY  
+
+
+
+### **3. Data Validation Rules**
+
+**Rule 7:** IF energy_value < 0 THEN status = "INVALID_NEGATIVE" AND reject_from_analytics = TRUE  
+
+**Rule 8:** IF energy_value_kw > 50 AND meter_type = "RESIDENTIAL" THEN status = "SUSPICIOUSLY_HIGH" AND requires_manual_review = TRUE
+
+**Rule 9:** IF ABS(current_value - previous_value) > 30 AND time_gap = 15_min THEN status = "ABRUPT_CHANGE"
+
+**Rule 10:** IF timestamp > current_time + 5_minutes THEN timestamp = current_time AND status = "TIME_CORRECTED"
+
+
+
+### **4. Faulty Meter Detection Rules**
+
+**Rule 11:** IF energy_value = 0 FOR 24_consecutive_hours THEN meter_status = "POTENTIAL_FAULTY" AND generate_maintenance_ticket = TRUE  
+
+**Rule 12:** IF standard_deviation(last_48h_readings) < 0.01 THEN meter_status = "POTENTIAL_STUCK_METER"
+
+**Rule 13:** IF reading_pattern = "ALL_IDENTICAL_VALUES" THEN meter_status = "SUSPICIOUS_PATTERN"
+
+**Rule 14:** IF consumption < 10%_of_neighborhood_average AND duration > 7_days THEN meter_status = "ABNORMALLY_LOW"
+
+**Rule 15:** IF last_reading > 72_hours_ago THEN meter_status = "OFFLINE" AND communication_alert = TRUE
