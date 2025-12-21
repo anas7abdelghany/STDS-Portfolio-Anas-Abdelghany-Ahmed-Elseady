@@ -1,15 +1,9 @@
-# 📊 Education Management System
-
-![Excel](https://img.shields.io/badge/Microsoft_Excel-217346?style=for-the-badge&logo=microsoft-excel&logoColor=white)
-![Data Analysis](https://img.shields.io/badge/Data_Analysis-FF6B6B?style=for-the-badge&logo=google-analytics&logoColor=white)
-![Education](https://img.shields.io/badge/Education-4ECDC4?style=for-the-badge&logo=google-scholar&logoColor=white)
-
 ## 📁 Project Overview
 
 This project contains comprehensive educational data including students, instructors, courses, and evaluation metrics in an Excel workbook.
 
 
-<img width="1289" height="702" alt="dashboard1 png" src="https://github.com/user-attachments/assets/aa4d78ed-116d-49c1-8daf-5dc07853fc9a" />
+<img width="1289" height="702" alt="STDS/Task2-DataBase-Excal/Screenshot 2025-11-29 175216.png" src="https://github.com/user-attachments/assets/aa4d78ed-116d-49c1-8daf-5dc07853fc9a" />
 <img width="1163" height="558" alt="dashboard2 png" src="https://github.com/user-attachments/assets/d919ba04-bfcc-46e0-b28d-8edc114757d1" />
 
 
