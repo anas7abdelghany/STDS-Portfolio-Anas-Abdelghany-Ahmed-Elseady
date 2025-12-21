@@ -38,7 +38,6 @@ This section defines the rigorous rules applied during the transformation phase 
 | **Rule 10** | `timestamp > current + 5m` | Status: `TIME_CORRECTED` (Set to current time) |
 
 ### **4. Faulty Meter Detection**
-> ⚠️ **Proactive Maintenance:** These rules help identify hardware issues and connectivity problems automatically.
 
 | Rule ID | Issue | Condition | Action / Status |
 | :--- | :--- | :--- | :--- |
