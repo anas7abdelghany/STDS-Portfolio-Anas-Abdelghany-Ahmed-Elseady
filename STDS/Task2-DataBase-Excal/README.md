@@ -3,8 +3,8 @@
 This project contains comprehensive educational data including students, instructors, courses, and evaluation metrics in an Excel workbook.
 
 
-<img width="1289" height="702" alt="STDS/Task2-DataBase-Excal/Screenshot 2025-11-29 175216.png" src="https://github.com/user-attachments/assets/aa4d78ed-116d-49c1-8daf-5dc07853fc9a" />
-<img width="1163" height="558" alt="dashboard2 png" src="https://github.com/user-attachments/assets/d919ba04-bfcc-46e0-b28d-8edc114757d1" />
+<img width="1289" height="702" alt="Dash1.png" src="https://github.com/user-attachments/assets/aa4d78ed-116d-49c1-8daf-5dc07853fc9a" />
+<img width="1163" height="558" alt="Dash2.png" src="https://github.com/user-attachments/assets/d919ba04-bfcc-46e0-b28d-8edc114757d1" />
 
 
 
