@@ -113,4 +113,3 @@ This **comprehensive Excel-based Education Management System** provides a centra
 | **Advanced Formulas** | Complex calculations | Accurate metrics |
 | **Macro Automation** | Repetitive task reduction | Time savings |
 
-### **Data Architecture**
