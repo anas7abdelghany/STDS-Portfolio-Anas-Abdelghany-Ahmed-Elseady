@@ -79,7 +79,3 @@ Simultaneously, data is converted to **Apache Parquet** format.
 * ❌ **On Failure:** Records are routed to a **DLQ** for inspection, an **SNS Alert** is triggered, and invalid data is blocked from downstream systems to maintain data quality.
 
 ---
-
-### **Next Steps**
-* [ ] Integrate Grafana for real-time energy consumption dashboards.
-* [ ] Implement automated maintenance ticket generation via Jira API for Rule 11.
