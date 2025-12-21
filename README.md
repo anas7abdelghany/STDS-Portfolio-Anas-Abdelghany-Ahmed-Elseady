@@ -47,13 +47,13 @@ A design thinking exercise for a serverless data pipeline processing smart-meter
 
 ## 🛠️ Technical Skills Demonstrated
 
-| Skill Category | Specific Competencies | Projects Applied |
-|----------------|----------------------|------------------|
-| **Data Visualization** | Dashboard design, KPI tracking, interactive filtering | 1, 3, 4 |
-| **Database Design** | ER modeling, normalization, data validation | 2 |
-| **Business Intelligence** | DAX formulas, Power Query, calculated fields | 1, 4 |
-| **Data Engineering** | ETL pipeline design, data transformation rules | 5 |
-| **Analytical Thinking** | Business insights generation, trend analysis | All |
+| Skill Category | Specific Competencies |
+|----------------|----------------------|
+| **Data Visualization** | Dashboard design, KPI tracking, interactive filtering |
+| **Database Design** | ER modeling, normalization, data validation |
+| **Business Intelligence** | DAX formulas, Power Query, calculated fields |
+| **Data Engineering** | ETL pipeline design, data transformation rules |
+| **Analytical Thinking** | Business insights generation, trend analysis |
 
 ---
 
