@@ -1,90 +1,59 @@
 # 📊 Data Analysis & Data Engineering Portfolio – Selected Projects
 
-This portfolio contains **five comprehensive projects** covering data analysis, visualization, database design, and data pipeline architecture using **Excel, SQL, Power BI, and conceptual ETL design**.
+Welcome to my professional portfolio showcasing **five comprehensive projects** in data analysis, visualization, database design, and ETL pipeline architecture. This collection demonstrates hands-on experience with **Excel, Power BI, Tableau, SQL, and data engineering concepts**.
 
 ---
 
-## 🎓 **1. CRM Sales Performance Dashboard – Excel Dashboard**
+## 📋 Portfolio Overview
 
-**Description:**  
-Interactive sales performance dashboard tracking deals, revenue, and agent performance.
-
-**Key Features:**
-- Won/Lost/Engaged deal tracking
-- Revenue analysis by product and region
-- Manager performance and win rate analytics
-
-**Tools:** Microsoft Excel
+| # | Project | Domain | Tools | Key Deliverables |
+|---|---------|--------|-------|------------------|
+| 1 | CRM Sales Performance Dashboard | Sales Analytics | **Excel** | Interactive dashboard, KPI tracking, revenue analysis |
+| 2 | ITI Educational Database System | Education Management | **Excel + SQL Design** | Relational database, data validation, reporting system |
+| 3 | Adidas Sales & Profit Analysis | Retail Analytics | **Tableau** | Geographic visualization, channel analysis, product performance |
+| 4 | AdventureWorks Analytics Dashboard | Enterprise BI | **Power BI + DAX** | Multi-page dashboard, predictive insights, customer analytics |
+| 5 | GreenStream Energy ETL Pipeline | Data Engineering | **Conceptual Design** | ETL architecture, transformation logic, error handling |
 
 ---
 
-## 🗃️ **2. ITI Educational Database System – Excel & SQL Design**
+## 🎯 Project Details
 
-**Description:**  
-A structured database system for an educational institute, designed with Excel as the front-end and simulated SQL backend.
+### **1. CRM Sales Performance Dashboard – Excel**
+A fully interactive Excel dashboard for tracking sales performance, deal outcomes, and agent productivity.
+- **Features:** Dynamic filters, pivot tables, conditional formatting, automated KPI calculations
+- **Business Impact:** Enables real-time sales monitoring and performance evaluation
 
-**Key Features:**
-- Student, course, instructor, and enrollment tables
-- Data validation and relational integrity in Excel
-- Query-based reporting and analytics
+### **2. ITI Educational Database System – Excel & SQL Design**
+A simulated database management system for an educational institute with Excel as the front-end interface.
+- **Features:** Normalized tables (Students, Courses, Instructors, Enrollment), data validation, query-based reports
+- **Business Impact:** Streamlines student tracking, grade management, and administrative reporting
 
-**Tools:** Excel, Database Design Principles
+### **3. Adidas Sales & Profit Analysis – Tableau**
+Comprehensive visualization of Adidas sales data across the United States (2020-2022).
+- **Features:** Interactive maps, time-series analysis, product category breakdown, retailer performance
+- **Business Impact:** Identifies top-performing regions, products, and sales channels for strategic planning
 
----
+### **4. AdventureWorks Analytics Dashboard – Power BI**
+Enterprise-level business intelligence solution with advanced analytics and predictive insights.
+- **Features:** Multi-page dashboard, DAX measures, key influencers analysis, drill-through capabilities
+- **Business Impact:** Provides holistic view of sales performance, customer behavior, and product trends
 
-## 👟 **3. Adidas Sales & Profit Analysis – Tableau**
-
-**Description:**  
-Comprehensive US sales analysis for Adidas (2020–2022) with geographic and product insights.
-
-**Key Metrics:**
-- $899.90M total sales, $332.13M profit
-- 2.48M units sold, 9,648 retailers
-
-**Insights:**
-- Online sales lead (50.7%)
-- West region is top performer
-- Men's Street Footwear best-selling category
-
-**Tools:** Tableau
+### **5. GreenStream Energy – ETL Pipeline Design (Conceptual)**
+A design thinking exercise for a serverless data pipeline processing smart-meter data.
+- **Features:** Architecture diagram, transformation logic, error handling, data validation rules
+- **Business Impact:** Conceptual framework for converting raw data into analytics-ready formats
 
 ---
 
-## 🚀 **4. AdventureWorks Analytics Dashboard – Power BI**
+## 🛠️ Technical Skills Demonstrated
 
-**Description:**  
-Enterprise BI solution for sales, product, and customer analytics.
-
-**Key Metrics:**
-- $123.22M total due, 31K orders
-- 275K units sold
-
-**Tools:** Power BI, DAX, AdventureWorks Database
-
----
-
-## ⚡ **5. GreenStream Energy – ETL Pipeline Design (Conceptual)**
-
-**Description:**  
-A **design thinking exercise** for a serverless ETL pipeline to process smart-meter data for a utility company.
-
-**Key Components:**
-- **ETL Architecture Diagram:** Source → Transformation → Destinations with error handling
-- **Business Rules:** Unit conversion, missing value handling, faulty meter detection
-- **Record Lifecycle:** From raw CSV to cleaned RDS and archived Parquet
-
-**Focus:** Data pipeline logic, transformation rules, and failure handling — **not implementation**.
+| Skill Category | Specific Competencies | Projects Applied |
+|----------------|----------------------|------------------|
+| **Data Visualization** | Dashboard design, KPI tracking, interactive filtering | 1, 3, 4 |
+| **Database Design** | ER modeling, normalization, data validation | 2 |
+| **Business Intelligence** | DAX formulas, Power Query, calculated fields | 1, 4 |
+| **Data Engineering** | ETL pipeline design, data transformation rules | 5 |
+| **Analytical Thinking** | Business insights generation, trend analysis | All |
 
 ---
 
-## 🛠️ **Technologies Used**
-
-- **Excel:** Dashboards, Database Simulation, Advanced Formulas
-- **Power BI:** Interactive Dashboards, DAX, Data Modeling
-- **SQL / Database Design:** Relational structuring, query logic
-- **Python:** Data cleaning, transformation (Pandas)
-- **ETL Design:** Pipeline architecture, data validation, error handling
-
----
-
-## 📁 **Project Structure**
